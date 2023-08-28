@@ -1,0 +1,115 @@
+int irleft=10;
+int irright=A7;
+int ltrig=12;
+int lecho=11;
+int rtrig=A0;
+int recho=A1;
+int mtrig=2;
+int mecho=4;
+int in1=8;
+int in2=6;
+int in3=9;
+int in4=7;
+int enA=5;
+int enB=3;
+
+float time_takenl,inchesl, cml;
+float time_takenm,inchesm, cmm;
+float time_takenr,inchesr, cmr;
+
+void ultrasonicl();
+void ultrasonicr();
+void ultrasonicm();
+void setup() {
+  pinMode(ltrig, OUTPUT);            // trig is output pin
+  pinMode(lecho, INPUT);             // echo is input pin
+  pinMode(rtrig, OUTPUT);            // trig is output pin
+  pinMode(recho, INPUT);             // echo is input pin
+  pinMode(mtrig, OUTPUT);            // trig is output pin
+  pinMode(mecho, INPUT);             // echo is input pin
+  pinMode(irright, INPUT);  
+  pinMode(irleft, INPUT);  
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  Serial.begin(9600);               // initialize serial monitor
+  delay(10);
+
+}
+
+void loop() {
+ultrasonicl();
+ultrasonicr();
+ultrasonicm();
+analogWrite(enA,255);
+analogWrite(enB,255);
+
+  digitalWrite(in1,HIGH);
+  digitalWrite(in2,HIGH);
+  digitalWrite(in3,HIGH);
+  digitalWrite(in4,HIGH);
+delay(1000);
+  digitalWrite(in1,LOW);
+  digitalWrite(in2,LOW);
+  digitalWrite(in3,LOW);
+  digitalWrite(in4,LOW);
+
+int lval=digitalRead(irleft);
+int rval=digitalRead(irright);
+Serial.print("Value");
+Serial.print(lval);
+Serial.print(" | ");
+Serial.println(rval);
+delay(1000);
+ultrasonicl();
+ultrasonicm();
+ultrasonicr();
+}
+void ultrasonicl(){
+  digitalWrite(ltrig,HIGH);          // Trig pin High
+  delayMicroseconds(10);             // wait for 10us
+  digitalWrite(ltrig, LOW);           // off the trig pin
+
+  time_takenl = pulseIn(lecho, HIGH);  // time taken to recieve waves
+  cml = time_takenl/58;                // general formula
+  inchesl = time_takenl/148;           // general formula
+
+  Serial.print("inchesLeft = ");         // Print on Serial monitor 
+  Serial.println(inchesl);
+
+  Serial.print("cmLeft = ");             // Print on serial monitor
+  Serial.println(cml);
+}
+void ultrasonicm(){
+  digitalWrite(mtrig, HIGH);          // Trig pin High
+  delayMicroseconds(10);             // wait for 10us
+  digitalWrite(mtrig, LOW);           // off the trig pin
+
+  time_takenm = pulseIn(mecho, HIGH);  // time taken to recieve waves
+  cmm = time_takenm/58;                // general formula
+  inchesm = time_takenm/148;           // general formula
+
+  Serial.print("inchesMid = ");         // Print on Serial monitor 
+  Serial.println(inchesm);
+
+  Serial.print("cmMid = ");             // Print on serial monitor
+  Serial.println(cmm);
+}
+void ultrasonicr(){
+  digitalWrite(rtrig, HIGH);          // Trig pin High
+  delayMicroseconds(10);             // wait for 10us
+  digitalWrite(rtrig, LOW);           // off the trig pin
+
+  time_takenr = pulseIn(recho, HIGH);  // time taken to recieve waves
+  cmr = time_takenr/58;                // general formula
+  inchesr = time_takenr/148;           // general formula
+
+  Serial.print("inchesRight = ");         // Print on Serial monitor 
+  Serial.println(inchesr);
+
+  Serial.print("cmRight = ");             // Print on serial monitor
+  Serial.println(cmr);
+}

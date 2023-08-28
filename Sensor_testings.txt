@@ -1,0 +1,90 @@
+int irleft=10;
+int irright=A7;
+int ltrig=12;
+int lecho=11;
+int rtrig=A0;
+int recho=A1;
+int mtrig=2;
+int mecho=4;
+
+int lval,rval;
+
+float ultrasonicl();
+float ultrasonicr();
+float ultrasonicm();
+void ir_sensor();
+
+void setup() {
+  pinMode(ltrig, OUTPUT);            // trig is output pin
+  pinMode(lecho, INPUT);             // echo is input pin
+  pinMode(rtrig, OUTPUT);            // trig is output pin
+  pinMode(recho, INPUT);             // echo is input pin
+  pinMode(mtrig, OUTPUT);            // trig is output pin
+  pinMode(mecho, INPUT);             // echo is input pin
+  pinMode(irright, INPUT);  
+  pinMode(irleft, INPUT);  
+  Serial.begin(9600);               // initialize serial monitor
+  delay(10);
+}
+void loop() {
+
+  ir_sensor();
+  float inchesm=ultrasonicm();
+  float inchesr=ultrasonicr();
+  float inchesl=ultrasonicl();
+delay(500);
+
+}
+float ultrasonicl(){
+  digitalWrite(ltrig,LOW);          // Trig pin High
+  digitalWrite(lecho,HIGH);          // Trig pin High
+  digitalWrite(ltrig,HIGH);          // Trig pin High
+  delayMicroseconds(10);             // wait for 10us
+  digitalWrite(ltrig, LOW);          // off the trig pin
+
+  float time_taken = pulseIn(lecho, HIGH);  // time taken to recieve waves
+  float inches = time_taken/148;            // general formula
+
+  Serial.print("inchesLeft = ");         // Print on Serial monitor 
+  Serial.println(inches);
+
+  return inches;
+}
+float ultrasonicm(){
+  digitalWrite(mtrig, HIGH);          // Trig pin High
+  delayMicroseconds(10);             // wait for 10us
+  digitalWrite(mtrig, LOW);           // off the trig pin
+
+  float time_taken = pulseIn(mecho, HIGH);  // time taken to recieve waves
+  float inches = time_taken/148;           // general formula
+
+  Serial.print("inchesMid = ");         // Print on Serial monitor 
+  Serial.println(inches);
+  return inches;
+}
+float ultrasonicr(){
+  digitalWrite(rtrig, HIGH);          // Trig pin High
+  delayMicroseconds(10);             // wait for 10us
+  digitalWrite(rtrig, LOW);           // off the trig pin
+
+  float time_taken = pulseIn(recho, HIGH);  // time taken to recieve waves
+  float inches = time_taken/148;           // general formula
+
+  Serial.print("inchesRight = ");         // Print on Serial monitor 
+  Serial.println(inches);
+  return inches;
+}
+void ir_sensor(){
+  lval=digitalRead(irleft);
+  rval=analogRead(irright);
+
+if(rval>500)
+  rval=1;
+else
+  rval=0;
+
+  Serial.print("Value : ");
+  Serial.print(lval);
+  Serial.print(" | ");
+  Serial.println(rval);
+}
